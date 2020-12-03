@@ -6,7 +6,7 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="框架名称" prop="name">
+      <el-form-item label="名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入框架名称"
@@ -22,9 +22,8 @@
           clearable
           size="small"
         >
-          <el-option label="待审核" :value="0" />
-          <el-option label="已审核" :value="1" />
-          <el-option label="待删除" :value="2" />
+          <el-option label="启用" :value="0" />
+          <el-option label="停用" :value="1" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -55,7 +54,6 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list">
-      <el-table-column min-width="35" label="id" align="center" prop="_id" />
       <el-table-column
         min-width="120"
         label="框架名称"
@@ -64,7 +62,14 @@
         show
         prop="name"
       />
-
+      <el-table-column
+        min-width="30"
+        label="状态"
+        show-overflow-tooltip
+        align="center"
+        show
+        prop="status"
+      />
       <el-table-column label="宣传图" align="center" prop="image">
         <template slot-scope="scope">
           <img class="share-img" :src="scope.row.image">

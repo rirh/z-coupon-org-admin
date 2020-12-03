@@ -50,10 +50,9 @@ const actions = {
         if (!response) {
           return reject('Verification failed, please Login again.')
         }
-        const { name, avatar } = response
         sessionStorage.setItem('uid', response.userInfo?._id)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', response.userInfo?.username)
+        commit('SET_AVATAR', response.avatarUrl || 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-ngaburcbpntf97199d/cabb4af0-352b-11eb-899d-733ae62bed2f.png')
         resolve(response)
       }).catch(error => {
         reject(error)
