@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-const url = '/mall-user'
+const url = '/coupon'
 
-export function login(data) {
+export function getCoupon(data) {
   return request({
     url,
     method: 'post',

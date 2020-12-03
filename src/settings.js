@@ -1,6 +1,8 @@
+const packageConfig = require('../package.json')
+
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: packageConfig.name,
 
   /**
    * @type {boolean} true | false
