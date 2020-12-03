@@ -28,6 +28,9 @@ export function logout(data) {
   return request({
     url,
     method: 'post',
-    data
+    data: {
+      action: 'logout',
+      ...data
+    }
   })
 }

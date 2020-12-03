@@ -6,15 +6,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getCoupon } from '@/api/coupon'
 export default {
   name: 'Dashboard',
   computed: {
     ...mapGetters(['name'])
-  },
-  async mounted() {
-    const res = await getCoupon()
-    console.log(res)
   }
 }
 </script>
