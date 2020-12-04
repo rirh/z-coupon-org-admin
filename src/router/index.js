@@ -58,10 +58,20 @@ export const constantRoutes = [
     path: '/coupon',
     component: Layout,
     children: [{
-      path: 'coupon',
+      path: 'list',
       name: 'coupon',
       component: () => import('@/views/coupon/index'),
       meta: { title: 'Coupon', icon: 'el-icon-s-ticket' }
+    }]
+  },
+  {
+    path: '/openids',
+    component: Layout,
+    children: [{
+      path: 'list',
+      name: 'openid',
+      component: () => import('@/views/openids/index'),
+      meta: { title: 'openids', icon: 'el-icon-user-solid' }
     }]
   },
   // {

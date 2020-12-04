@@ -14,7 +14,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    if (~config.url.indexOf('/coupon')) {
+    if (~config.url.indexOf('/coupon') || ~config.url.indexOf('/login-auth-wechat')) {
       config.baseURL = process.env.VUE_APP_BASE_COUPON_API
     } else {
       config.baseURL = process.env.VUE_APP_BASE_API
@@ -51,7 +51,9 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 0) {
+    if (res.code === 0 || res.affectedDocs) {
+      return res
+    } else {
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -72,8 +74,6 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
     }
   },
   error => {

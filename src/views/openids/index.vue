@@ -54,52 +54,8 @@
     </el-row>
 
     <el-table v-loading="loading" :data="list">
-      <el-table-column
-        min-width="120"
-        label="框架名称"
-        show-overflow-tooltip
-        align="center"
-        show
-        prop="name"
-      />
-      <el-table-column
-        min-width="30"
-        label="状态"
-        show-overflow-tooltip
-        align="center"
-        show
-        prop="status"
-      />
-      <el-table-column label="宣传图" align="center" prop="image">
-        <template slot-scope="scope">
-          <img class="share-img" :src="scope.row.image">
-        </template>
-      </el-table-column>
-      <el-table-column label="宣传主题" align="center" prop="content" />
-      <el-table-column label="APPID" align="center" prop="targetAppid" />
-      <el-table-column
-        label="操作"
-        align="center"
-        min-width="150"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            :loading="scope.row.editloading"
-            @click="handleUpdate(scope.row, scope.$index)"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            :loading="scope.row.removeloading"
-            @click="handleDelete(scope.row)"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="id" align="center" prop="_id" />
+      <el-table-column label="openid" align="center" prop="openid" />
     </el-table>
 
     <pagination
@@ -113,7 +69,7 @@
 </template>
 
 <script>
-import { getCoupon, removeCoupon } from '@/api/coupon'
+import { getOpenidList } from '@/api/openid'
 
 export default {
   data() {
@@ -136,7 +92,9 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const { code, data, affectedDocs } = await getCoupon(this.queryParams)
+      const { code, data, affectedDocs } = await getOpenidList(
+        this.queryParams
+      )
       this.loading = false
       this.total = affectedDocs
       if (!code) {
@@ -154,28 +112,7 @@ export default {
       this.handleQuery()
     },
     /** 新增按钮操作 */
-    handleAdd() {},
-
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      this.$confirm('是否确认删除策略框架编号为"' + row.name + '?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          return removeCoupon({
-            _id: row._id
-          })
-        })
-        .then(() => {
-          this.getList()
-          this.$message({
-            message: '删除成功!',
-            type: 'success'
-          })
-        })
-    }
+    handleAdd() {}
   }
 }
 </script>

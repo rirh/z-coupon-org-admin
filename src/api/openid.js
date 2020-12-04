@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-const url = '/coupon'
+const url = '/login-auth-wechat'
 
-export function getCoupon(data) {
+export function getOpenidList(data) {
   return request({
     url,
     method: 'post',
