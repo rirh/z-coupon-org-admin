@@ -56,7 +56,7 @@
     <el-table v-loading="loading" :data="list">
       <el-table-column
         min-width="120"
-        label="框架名称"
+        label="名称"
         show-overflow-tooltip
         align="center"
         show
@@ -69,7 +69,15 @@
         align="center"
         show
         prop="status"
-      />
+      >
+        <template slot-scope="scope">
+          <span
+            :style="{ color: scope.row.status === 0 ? '#F56C6C' : '#67C23A' }"
+          >
+            {{ scope.row.status === 0 ? "下线" : "上架" }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="宣传图" align="center" prop="image">
         <template slot-scope="scope">
           <img class="share-img" :src="scope.row.image">
@@ -105,15 +113,82 @@
     <pagination
       v-show="total > 0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.limit"
       @pagination="getList"
     />
+
+    <!-- 新增编辑对话框 -->
+    <!-- 添加或修改参数配置对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="主题名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入用户昵称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="链接地址" prop="url">
+              <el-input v-model="form.url" placeholder="请输入链接地址" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :span="24" display="flex" justify="center" align="center">
+          <el-form-item>
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://jsonplaceholder.typicode.com/posts/"
+              multiple
+            >
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">
+                将文件拖到此处，或<em>点击上传</em>
+              </div>
+              <div slot="tip" class="el-upload__tip">
+                只能上传图片文件，且不超过20M
+              </div>
+            </el-upload>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-col :span="24" prop="image">
+            <el-form-item label="图片地址" prop="image">
+              <el-input v-model="form.image" placeholder="请输入图片地址" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="主题描述" prop="content">
+              <el-input
+                v-model="form.content"
+                type="textarea"
+                placeholder="请输入主题描述"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="状态" prop="state" required>
+              <el-switch v-model="form.state" />
+              {{ form.state ? "上架" : "下线" }}
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCoupon, removeCoupon } from '@/api/coupon'
+import { getCoupon, removeCoupon, addCoupon, updateCoupon } from '@/api/coupon'
 
 export default {
   data() {
@@ -121,13 +196,36 @@ export default {
       // 总条数
       total: 0,
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        limit: 10,
         name: null,
         status: null
       },
       loading: false,
-      list: []
+      list: [],
+      //
+      // 弹出层标题
+      title: '',
+      // 是否显示弹出层
+      open: false,
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        name: [
+          { required: true, message: '名称主题不能为空', trigger: 'blur' }
+        ],
+        url: [{ required: true, message: '链接不能为空', trigger: 'blur' }],
+        image: [
+          { required: true, message: '宣传图片不能为空', trigger: 'change' }
+        ],
+        content: [
+          { required: true, message: '主题描述不能为空', trigger: 'change' }
+        ],
+        price: [
+          { required: true, message: '邮箱地址不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   async mounted() {
@@ -150,12 +248,60 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm('queryForm')
       this.handleQuery()
     },
+    handleUpdate(row) {
+      this.reset()
+      this.open = true
+      this.title = '修改优惠券'
+    },
     /** 新增按钮操作 */
-    handleAdd() {},
-
+    handleAdd() {
+      this.reset()
+      this.open = true
+      this.title = '添加优惠券'
+    },
+    /** 提交按钮 */
+    // 取消按钮
+    cancel() {
+      this.open = false
+      this.reset()
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        userId: undefined,
+        deptId: undefined,
+        userName: undefined,
+        nickName: undefined,
+        password: undefined,
+        phonenumber: undefined,
+        email: undefined,
+        sex: undefined,
+        status: '0',
+        remark: undefined
+      }
+    },
+    submitForm: function() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.form.status = this.form.status ? 1 : 0
+          if (this.form.userId !== undefined) {
+            updateCoupon(this.form).then((response) => {
+              this.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
+          } else {
+            addCoupon(this.form).then((response) => {
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
+          }
+        }
+      })
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       this.$confirm('是否确认删除策略框架编号为"' + row.name + '?', '警告', {

@@ -57,11 +57,12 @@ export const constantRoutes = [
   {
     path: '/coupon',
     component: Layout,
+    meta: { title: 'Coupon', icon: 'el-icon-s-ticket' },
     children: [{
       path: 'list',
       name: 'coupon',
       component: () => import('@/views/coupon/index'),
-      meta: { title: 'Coupon', icon: 'el-icon-s-ticket' }
+      meta: { title: 'coupon', icon: 'el-icon-s-ticket' }
     }]
   },
   {

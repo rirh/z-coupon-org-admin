@@ -61,8 +61,8 @@
     <pagination
       v-show="total > 0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.limit"
       @pagination="getList"
     />
   </div>
@@ -77,8 +77,8 @@ export default {
       // 总条数
       total: 0,
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        limit: 10,
         name: null,
         status: null
       },
@@ -110,6 +110,14 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.handleQuery()
+    },
+    resetForm() {
+      this.queryParams = {
+        page: 1,
+        limit: 10,
+        name: null,
+        status: null
+      }
     },
     /** 新增按钮操作 */
     handleAdd() {}

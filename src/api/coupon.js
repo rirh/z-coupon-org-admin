@@ -12,6 +12,27 @@ export function getCoupon(data) {
     }
   })
 }
+
+export function addCoupon(data) {
+  return request({
+    url,
+    method: 'post',
+    data: {
+      action: 'add',
+      ...data
+    }
+  })
+}
+export function updateCoupon(data) {
+  return request({
+    url,
+    method: 'post',
+    data: {
+      action: 'update',
+      ...data
+    }
+  })
+}
 export function removeCoupon(data) {
   return request({
     url,
