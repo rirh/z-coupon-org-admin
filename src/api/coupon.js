@@ -12,6 +12,16 @@ export function getCoupon(data) {
     }
   })
 }
+export function getCouponInfo(data) {
+  return request({
+    url,
+    method: 'post',
+    data: {
+      action: 'queryRow',
+      ...data
+    }
+  })
+}
 
 export function addCoupon(data) {
   return request({
@@ -33,6 +43,15 @@ export function updateCoupon(data) {
     }
   })
 }
+
+export function upload(data) {
+  return request({
+    url: '/upload',
+    method: 'post',
+    data
+  })
+}
+
 export function removeCoupon(data) {
   return request({
     url,

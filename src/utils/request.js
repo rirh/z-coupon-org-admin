@@ -14,7 +14,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    if (~config.url.indexOf('/coupon') || ~config.url.indexOf('/login-auth-wechat')) {
+    if (~config.url.indexOf('/coupon') ||
+      ~config.url.indexOf('/upload') ||
+      ~config.url.indexOf('/login-auth-wechat')) {
       config.baseURL = process.env.VUE_APP_BASE_COUPON_API
     } else {
       config.baseURL = process.env.VUE_APP_BASE_API

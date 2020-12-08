@@ -42,7 +42,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -51,9 +51,10 @@
           @click="handleAdd"
         >新增</el-button>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="list">
+      <el-table-column type="index" width="50" />
       <el-table-column label="id" align="center" prop="_id" />
       <el-table-column label="openid" align="center" prop="openid" />
     </el-table>

@@ -141,8 +141,8 @@
             <el-upload
               class="upload-demo"
               drag
-              action="https://jsonplaceholder.typicode.com/posts/"
-              multiple
+              action=""
+              :http-request="handleSuccess"
             >
               <i class="el-icon-upload" />
               <div class="el-upload__text">
@@ -188,11 +188,19 @@
 </template>
 
 <script>
-import { getCoupon, removeCoupon, addCoupon, updateCoupon } from '@/api/coupon'
+import {
+  getCoupon,
+  removeCoupon,
+  addCoupon,
+  updateCoupon,
+  upload,
+  getCouponInfo
+} from '@/api/coupon'
 
 export default {
   data() {
     return {
+      url: `${process.env.VUE_APP_BASE_COUPON_API}/upload`,
       // 总条数
       total: 0,
       queryParams: {
@@ -209,7 +217,9 @@ export default {
       // 是否显示弹出层
       open: false,
       // 表单参数
-      form: {},
+      form: {
+        state: true
+      },
       // 表单校验
       rules: {
         name: [
@@ -232,6 +242,22 @@ export default {
     this.getList()
   },
   methods: {
+    handleSuccess({ file }) {
+      if (file) {
+        console.log(file)
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          upload({
+            file: e.target.result,
+            name: file.name
+          })
+        }
+        reader.onerror = function(error) {
+          alert(error)
+        }
+        reader.readAsDataURL(file)
+      }
+    },
     async getList() {
       this.loading = true
       const { code, data, affectedDocs } = await getCoupon(this.queryParams)
@@ -252,8 +278,12 @@ export default {
     },
     handleUpdate(row) {
       this.reset()
-      this.open = true
-      this.title = '修改优惠券'
+      getCouponInfo({ _id: row._id }).then((res) => {
+        this.open = true
+        this.title = '修改优惠券'
+        this.form = Object.assign({}, this.form, res.data[0])
+        this.form.state = Number(this.form.state) === 1
+      })
     },
     /** 新增按钮操作 */
     handleAdd() {
