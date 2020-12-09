@@ -304,7 +304,6 @@ export default {
   },
   methods: {
     handleSuccess(file) {
-      console.log(file)
       this.form = { ...this.form, image: file.fileList[0].download_url }
     },
     async getList() {
