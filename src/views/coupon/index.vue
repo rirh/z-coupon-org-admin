@@ -124,8 +124,45 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
+            <el-form-item label="主题描述" prop="content">
+              <el-input
+                v-model="form.content"
+                type="textarea"
+                placeholder="请输入主题描述"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="主题名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入用户昵称" />
+              <el-input v-model="form.name" placeholder="请输入主题名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="减免价格" prop="price">
+              <el-input
+                v-model="form.price"
+                type="number"
+                placeholder="请输入最高减免价格"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择">
+                <el-option label="小程序" value="mini" />
+                <el-option label="网页" value="web" />
+                <el-option label="APP" value="app" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="state" required>
+              <el-switch v-model="form.state" />
+              {{ form.state ? "上架" : "下线" }}
             </el-form-item>
           </el-col>
         </el-row>
@@ -139,10 +176,14 @@
         <el-row :span="24" display="flex" justify="center" align="center">
           <el-form-item>
             <el-upload
+              v-if="!form.image"
+              ref="image"
               class="upload-demo"
               drag
-              action=""
-              :http-request="handleSuccess"
+              :multiple="false"
+              :limit="1"
+              :action="url"
+              :on-success="handleSuccess"
             >
               <i class="el-icon-upload" />
               <div class="el-upload__text">
@@ -152,7 +193,24 @@
                 只能上传图片文件，且不超过20M
               </div>
             </el-upload>
+            <el-avatar
+              v-else
+              shape="square"
+              :size="100"
+              fit="fill"
+              :src="form.image"
+            />
           </el-form-item>
+        </el-row>
+        <el-row>
+          <el-col v-show="form.type === 'mini'" :span="24">
+            <el-form-item label="APPID" prop="targetAppid">
+              <el-input
+                v-model="form.targetAppid"
+                placeholder="请输入要打开的小程序APPID"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="24" prop="image">
@@ -160,27 +218,14 @@
               <el-input v-model="form.image" placeholder="请输入图片地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="主题描述" prop="content">
-              <el-input
-                v-model="form.content"
-                type="textarea"
-                placeholder="请输入主题描述"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="状态" prop="state" required>
-              <el-switch v-model="form.state" />
-              {{ form.state ? "上架" : "下线" }}
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button
+          type="primary"
+          :loading="loading"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -193,14 +238,16 @@ import {
   removeCoupon,
   addCoupon,
   updateCoupon,
-  upload,
   getCouponInfo
 } from '@/api/coupon'
 
 export default {
   data() {
     return {
-      url: `${process.env.VUE_APP_BASE_COUPON_API}/upload`,
+      // url: `${process.env.VUE_APP_BASE_COUPON_API}/upload`,
+      url: 'https://crypto2server-576164.service.tcloudbase.com/upload',
+      file: { name: '' },
+      loading: false,
       // 总条数
       total: 0,
       queryParams: {
@@ -209,7 +256,6 @@ export default {
         name: null,
         status: null
       },
-      loading: false,
       list: [],
       //
       // 弹出层标题
@@ -218,23 +264,38 @@ export default {
       open: false,
       // 表单参数
       form: {
-        state: true
+        state: true,
+        image: '',
+        type: 'mini',
+        targetAppid: '',
+        price: 0
       },
       // 表单校验
       rules: {
         name: [
           { required: true, message: '名称主题不能为空', trigger: 'blur' }
         ],
+        price: [
+          { required: true, message: '最高减免价格不能为空', trigger: 'blur' }
+        ],
         url: [{ required: true, message: '链接不能为空', trigger: 'blur' }],
+        appid: [{ required: true, message: 'appid不能为空', trigger: 'blur' }],
         image: [
           { required: true, message: '宣传图片不能为空', trigger: 'change' }
         ],
         content: [
           { required: true, message: '主题描述不能为空', trigger: 'change' }
-        ],
-        price: [
-          { required: true, message: '邮箱地址不能为空', trigger: 'blur' }
         ]
+      }
+    }
+  },
+  watch: {
+    from: {
+      deep: true,
+      handle(msg) {
+        if (!msg.image) {
+          this.$refs.image.clearFiles()
+        }
       }
     }
   },
@@ -242,21 +303,9 @@ export default {
     this.getList()
   },
   methods: {
-    handleSuccess({ file }) {
-      if (file) {
-        console.log(file)
-        var reader = new FileReader()
-        reader.onload = function(e) {
-          upload({
-            file: e.target.result,
-            name: file.name
-          })
-        }
-        reader.onerror = function(error) {
-          alert(error)
-        }
-        reader.readAsDataURL(file)
-      }
+    handleSuccess(file) {
+      console.log(file)
+      this.form = { ...this.form, image: file.fileList[0].download_url }
     },
     async getList() {
       this.loading = true
@@ -278,7 +327,7 @@ export default {
     },
     handleUpdate(row) {
       this.reset()
-      getCouponInfo({ _id: row._id }).then((res) => {
+      getCouponInfo({ _id: row._id }).then(res => {
         this.open = true
         this.title = '修改优惠券'
         this.form = Object.assign({}, this.form, res.data[0])
@@ -300,31 +349,41 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        userId: undefined,
-        deptId: undefined,
-        userName: undefined,
-        nickName: undefined,
-        password: undefined,
-        phonenumber: undefined,
-        email: undefined,
-        sex: undefined,
-        status: '0',
-        remark: undefined
+        name: undefined,
+        url: undefined,
+        image: undefined,
+        content: undefined,
+        state: true,
+        type: 'mini',
+        targetAppid: undefined,
+        price: 0
       }
     },
     submitForm: function() {
-      this.$refs['form'].validate((valid) => {
+      if (this.loading) return
+      this.$refs['form'].validate(valid => {
         if (valid) {
+          this.loading = true
           this.form.status = this.form.status ? 1 : 0
-          if (this.form.userId !== undefined) {
-            updateCoupon(this.form).then((response) => {
-              this.msgSuccess('修改成功')
+          this.form.price = Number(this.form.price)
+          if (this.form._id !== undefined) {
+            updateCoupon(this.form).then(response => {
+              this.loading = false
+              this.$message({
+                message: '修改成功!',
+                type: 'success'
+              })
               this.open = false
               this.getList()
             })
           } else {
-            addCoupon(this.form).then((response) => {
-              this.msgSuccess('新增成功')
+            addCoupon(this.form).then(response => {
+              this.loading = false
+
+              this.$message({
+                message: '新增成功!',
+                type: 'success'
+              })
               this.open = false
               this.getList()
             })
