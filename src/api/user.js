@@ -1,36 +1,37 @@
-import request from '@/utils/request'
+import request from "@/utils/request";
 
-const url = '/mall-user'
+const url = "/login";
 
 export function login(data) {
   return request({
     url,
-    method: 'post',
+    baseURL: process.env.VUE_APP_BASE_USER_API,
+    method: "post",
     data: {
-      action: 'login',
+      action: "login",
       ...data
     }
-  })
+  });
 }
 
 export function getInfo(data) {
   return request({
     url,
-    method: 'post',
+    method: "post",
     data: {
-      action: 'getUserInfo',
-      uid: sessionStorage.getItem('uid')
+      action: "getUserInfo",
+      uid: sessionStorage.getItem("uid")
     }
-  })
+  });
 }
 
 export function logout(data) {
   return request({
     url,
-    method: 'post',
+    method: "post",
     data: {
-      action: 'logout',
+      action: "logout",
       ...data
     }
-  })
+  });
 }

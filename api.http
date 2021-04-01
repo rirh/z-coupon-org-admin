@@ -1,3 +1,20 @@
+POST https://8597e222-5d79-4aba-8825-7d8c02733833.bspapp.com/http/register HTTP/1.1
+Content-Type: : application/json
+
+{
+   
+}
+###
+POST https://8597e222-5d79-4aba-8825-7d8c02733833.bspapp.com/http/code HTTP/1.1
+Content-Type: application/json
+
+{
+    "type":"register",
+    "email":"admin@163.com"
+}
+
+ 
+###
 POST https://ff6fe938-8866-4357-80b5-c4f54340d8fa.bspapp.com/http/iso HTTP/1.1
 Content-Type: : application/json
 
