@@ -53,10 +53,30 @@
       </el-col>
     </el-row> -->
 
-    <el-table v-loading="loading" :data="list">
+    <el-table v-loading="loading" stripe :data="list">
       <el-table-column type="index" width="50" />
-      <el-table-column label="id" align="center" prop="_id" />
-      <el-table-column label="openid" align="center" prop="openid" />
+      <el-table-column label="id" align="center" prop="_id">
+        <template slot-scope="scope">
+          <el-link
+            v-clipboard="scope.row._id"
+            v-clipboard:success="copySuccess"
+          >
+            {{ scope.row._id }}
+            <i class="el-icon-copy-document" />
+          </el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="openid" align="center" prop="openid">
+        <template slot-scope="scope">
+          <el-link
+            v-clipboard="scope.row.openid"
+            v-clipboard:success="copySuccess"
+          >
+            {{ scope.row.openid }}
+            <i class="el-icon-copy-document" />
+          </el-link>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -91,6 +111,9 @@ export default {
     this.getList()
   },
   methods: {
+    copySuccess() {
+      this.$notify.success('复制成功！')
+    },
     async getList() {
       this.loading = true
       const { code, data, affectedDocs } = await getOpenidList(

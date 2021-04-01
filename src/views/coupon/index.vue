@@ -53,7 +53,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="list">
+    <el-table v-loading="loading" stripe :data="list">
       <el-table-column
         min-width="120"
         label="名称"
@@ -61,7 +61,17 @@
         align="center"
         show
         prop="name"
-      />
+      >
+        <template slot-scope="scope">
+          <el-link
+            v-clipboard="scope.row.name"
+            v-clipboard:success="copySuccess"
+          >
+            {{ scope.row.name }}
+            <i class="el-icon-copy-document" />
+          </el-link>
+        </template>
+      </el-table-column>
       <el-table-column
         min-width="30"
         label="状态"
@@ -84,7 +94,22 @@
         </template>
       </el-table-column>
       <el-table-column label="宣传主题" align="center" prop="content" />
-      <el-table-column label="APPID" align="center" prop="targetAppid" />
+      <el-table-column
+        label="APPID"
+        min-width="130"
+        align="center"
+        prop="targetAppid"
+      >
+        <template slot-scope="scope">
+          <el-link
+            v-clipboard="scope.row.targetAppid"
+            v-clipboard:success="copySuccess"
+          >
+            {{ scope.row.targetAppid }}
+            <i class="el-icon-copy-document" />
+          </el-link>
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -303,6 +328,9 @@ export default {
     this.getList()
   },
   methods: {
+    copySuccess() {
+      this.$notify.success('复制成功！')
+    },
     handleSuccess(file) {
       this.form = { ...this.form, image: file.fileList[0].download_url }
     },
