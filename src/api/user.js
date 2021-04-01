@@ -1,37 +1,35 @@
-import request from "@/utils/request";
-
-const url = "/login";
+import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url,
+    url: '/login',
     baseURL: process.env.VUE_APP_BASE_USER_API,
-    method: "post",
+    method: 'post',
     data: {
-      action: "login",
+      action: 'login',
       ...data
     }
-  });
+  })
 }
 
 export function getInfo(data) {
   return request({
-    url,
-    method: "post",
+    url: '/getUserInfo',
+    method: 'post',
     data: {
-      action: "getUserInfo",
-      uid: sessionStorage.getItem("uid")
+      action: 'getUserInfo',
+      uid: sessionStorage.getItem('uid')
     }
-  });
+  })
 }
 
 export function logout(data) {
   return request({
-    url,
-    method: "post",
+    url: '/logout',
+    method: 'post',
     data: {
-      action: "logout",
+      action: 'logout',
       ...data
     }
-  });
+  })
 }

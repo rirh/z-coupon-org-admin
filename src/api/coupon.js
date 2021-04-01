@@ -5,6 +5,7 @@ const url = '/coupon'
 export function getCoupon(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'query',
@@ -15,6 +16,7 @@ export function getCoupon(data) {
 export function getCouponInfo(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'queryRow',
@@ -26,6 +28,7 @@ export function getCouponInfo(data) {
 export function addCoupon(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'add',
@@ -36,6 +39,7 @@ export function addCoupon(data) {
 export function updateCoupon(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'update',
@@ -46,6 +50,7 @@ export function updateCoupon(data) {
 
 export function upload(data) {
   return request({
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     url: '/upload',
     method: 'post',
     data
@@ -55,6 +60,7 @@ export function upload(data) {
 export function removeCoupon(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'remove',
@@ -66,6 +72,7 @@ export function removeCoupon(data) {
 export function getInfo(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data: {
       action: 'getUserInfo',
@@ -77,6 +84,7 @@ export function getInfo(data) {
 export function logout(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
     method: 'post',
     data
   })

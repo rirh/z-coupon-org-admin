@@ -35,25 +35,20 @@ module.exports = {
     open: true,
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: process.env.VUE_APP_HOST,
+      [process.env.VUE_APP_BASE_USER_API]: {
+        target: process.env.VUE_APP_HOST_USER,
         changeOrigin: true,
+        logLevel: "debug",
         pathRewrite: {
-          ["^" + process.env.VUE_APP_BASE_API]: ""
+          ["^" + process.env.VUE_APP_BASE_USER_API]: ""
         }
       },
       [process.env.VUE_APP_BASE_COUPON_API]: {
         target: process.env.VUE_APP_HOST_COUPON,
         changeOrigin: true,
+        logLevel: "debug",
         pathRewrite: {
           ["^" + process.env.VUE_APP_BASE_COUPON_API]: ""
-        }
-      },
-      [process.env.VUE_APP_BASE_USER_API]: {
-        target: process.env.VUE_APP_HOST_USER,
-        changeOrigin: true,
-        pathRewrite: {
-          ["^" + process.env.VUE_APP_HOST_USER]: ""
         }
       }
     },
