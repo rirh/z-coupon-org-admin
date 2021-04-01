@@ -417,6 +417,6 @@ export default {
 <style>
 .share-img {
   height: 80px;
-  width: 50px;
+  /* width: 50px; */
 }
 </style>
