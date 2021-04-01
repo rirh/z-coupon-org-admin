@@ -150,8 +150,5 @@ export default {
 </script>
 
 <style>
-.share-img {
-  height: 80px;
-  width: 50px;
-}
+
 </style>
