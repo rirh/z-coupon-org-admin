@@ -414,7 +414,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .share-img {
   height: 80px;
   /* width: 50px; */

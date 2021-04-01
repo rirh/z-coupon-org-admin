@@ -1,27 +1,57 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div class="app-container dashboard-container">
+    <div>
+      <el-row>
+        <el-col :span="5">
+          <el-card class="box-card">
+            <el-row class="dashboard-title">
+              Coupon Active User
+            </el-row>
+            <el-row class="dashboard-text">
+              <countTo :start-val="0" :end-val="CouponUser" :duration="3000" />
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getOpenidList } from '@/api/openid'
+import countTo from 'vue-count-to'
+
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters(['name'])
+  components: {
+    countTo
+  },
+  data() {
+    return {
+      CouponUser: 0,
+      start: 0
+    }
+  },
+  async mounted() {
+    const { affectedDocs } = await getOpenidList()
+    this.CouponUser = affectedDocs
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .dashboard {
-  &-container {
-    margin: 30px;
+  background-color: #fafafa;
+  &-title {
+    text-align: center;
+    margin: 5px 0;
+    font-size: 20px;
   }
   &-text {
-    font-size: 30px;
-    line-height: 46px;
+    text-align: center;
+    margin: 10px;
+    font-size: 26px;
+    font-weight: bold;
   }
 }
 </style>
