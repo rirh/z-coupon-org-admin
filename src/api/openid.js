@@ -5,6 +5,8 @@ const url = '/login-auth-wechat'
 export function getOpenidList(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
+
     method: 'post',
     data: {
       action: 'query',
@@ -15,6 +17,8 @@ export function getOpenidList(data) {
 export function removeCoupon(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
+
     method: 'post',
     data: {
       action: 'remove',
@@ -26,6 +30,8 @@ export function removeCoupon(data) {
 export function getInfo(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
+
     method: 'post',
     data: {
       action: 'getUserInfo',
@@ -37,6 +43,8 @@ export function getInfo(data) {
 export function logout(data) {
   return request({
     url,
+    baseURL: process.env.VUE_APP_BASE_COUPON_API,
+
     method: 'post',
     data
   })
