@@ -67,7 +67,8 @@ const actions = {
           commit('update_userinfo', response.userInfo)
           commit(
             'SET_AVATAR',
-            response.avatarUrl ||
+            response.avatar ||
+              response.avatarUrl ||
               'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-aliyun-ngaburcbpntf97199d/cabb4af0-352b-11eb-899d-733ae62bed2f.png'
           )
           resolve(response)
@@ -81,7 +82,7 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout({ token: state.userInfo.token })
+      logout({ token: getToken() })
         .then(() => {
           removeToken() // must remove  token  first
           resetRouter()

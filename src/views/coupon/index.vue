@@ -11,7 +11,7 @@
           v-model="queryParams.name"
           placeholder="请输入框架名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -20,7 +20,7 @@
           v-model="queryParams.status"
           placeholder="请选择框架状态"
           clearable
-          size="small"
+          size="mini"
         >
           <el-option label="上线" :value="1" />
           <el-option label="下架" :value="0" />

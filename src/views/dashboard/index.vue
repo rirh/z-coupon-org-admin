@@ -2,7 +2,7 @@
   <div class="app-container dashboard-container">
     <div>
       <el-row>
-        <el-col :span="5">
+        <el-col :md="10" :lg="8" :span="8" :xs="24" :sm="24">
           <el-card class="box-card">
             <el-row class="dashboard-title">
               Coupon Active User

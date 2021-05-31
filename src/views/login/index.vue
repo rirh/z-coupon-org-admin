@@ -60,7 +60,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'Login',
   data() {
@@ -123,6 +122,7 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
+              this.$store.dispatch('user/getInfo')
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
